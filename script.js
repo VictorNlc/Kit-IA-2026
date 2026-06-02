@@ -197,35 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================
-    // 6. Calculadora de Preço (Checkout + Order Bump)
-    // ==========================================
-    const orderBumpCheck = document.getElementById('order-bump-check');
-    const displayedPrice = document.getElementById('displayed-price');
-    const displayedInstallments = document.getElementById('displayed-installments');
-
-    const BASE_PRICE = 47.00;
-    const BUMP_PRICE = 19.90;
-
-    function updatePrice() {
-        if (!displayedPrice || !displayedInstallments) return;
-
-        if (orderBumpCheck && orderBumpCheck.checked) {
-            const total = BASE_PRICE + BUMP_PRICE;
-            // Formatando valor
-            displayedPrice.textContent = total.toFixed(2).replace('.', ',');
-            displayedInstallments.textContent = `ou 5x de R$ 14,00 no cartão de crédito`;
-        } else {
-            displayedPrice.textContent = BASE_PRICE.toFixed(2).replace('.', ',');
-            displayedInstallments.textContent = `ou 5x de R$ 10,00 no cartão de crédito`;
-        }
-    }
-
-    if (orderBumpCheck) {
-        orderBumpCheck.addEventListener('change', updatePrice);
-    }
-
-    // ==========================================
-    // 7. Validação Segura e Redirecionamento de Leads
+    // 6. Validação Segura e Redirecionamento de Leads (Kiwify)
     // ==========================================
     const leadForm = document.getElementById('lead-secure-form');
     const btnSubmit = document.getElementById('btn-submit-checkout');
@@ -262,16 +234,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // 2. Definir Links de Checkout Oficiais da Kiwify (Sem chaves do backend no frontend!)
-            // Nota de Segurança: A url de redirecionamento é construída no lado do cliente apenas com parâmetros públicos de preenchimento de formulário.
             // Para Kiwify, os parâmetros suportados no redirecionamento para preenchimento automático são:
             // - name: Nome completo do cliente
             // - email: E-mail do cliente
             // - phone: Número de WhatsApp do cliente
-            const checkoutBaseUrl = 'https://pay.kiwify.com.br/XXXXXXX'; // Substitua pelo link de checkout simples do seu produto Kiwify
-            const checkoutBumpUrl = 'https://pay.kiwify.com.br/YYYYYYY'; // Substitua pelo link de checkout Kiwify com o Order Bump selecionado
+            const checkoutUrl = 'https://pay.kiwify.com.br/mZpCkhh';
             
-            let finalCheckoutUrl = orderBumpCheck && orderBumpCheck.checked ? checkoutBumpUrl : checkoutBaseUrl;
-
             // Adicionar dados do cliente como parâmetros de consulta públicos (dados de preenchimento)
             const urlParams = new URLSearchParams();
             urlParams.append('name', sanitizedName);
@@ -279,19 +247,26 @@ document.addEventListener('DOMContentLoaded', () => {
             urlParams.append('phone', sanitizedPhone);
             urlParams.append('src', 'pagina-vendas-kit-ia');
 
-            const separator = finalCheckoutUrl.includes('?') ? '&' : '?';
-            const redirectUrl = `${finalCheckoutUrl}${separator}${urlParams.toString()}`;
+            const separator = checkoutUrl.includes('?') ? '&' : '?';
+            const redirectUrl = `${checkoutUrl}${separator}${urlParams.toString()}`;
 
             // Exemplo de como integrar uma captura silenciosa (Sem expor credenciais):
             /*
             fetch('https://formspree.io/f/seu-id-formulario', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: sanitizedName, email: sanitizedEmail, phone: sanitizedPhone, orderBump: orderBumpCheck.checked })
+                body: JSON.stringify({ name: sanitizedName, email: sanitizedEmail, phone: sanitizedPhone })
             }).finally(() => {
                 window.location.href = redirectUrl;
             });
             */
+            
+            // Simulação de redirecionamento imediato e seguro
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 1000);
+        });
+    }
             
             // Simulação de redirecionamento imediato e seguro
             setTimeout(() => {
