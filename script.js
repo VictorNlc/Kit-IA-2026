@@ -260,14 +260,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = redirectUrl;
             });
             */
-            
-            // Simulação de redirecionamento imediato e seguro
-            setTimeout(() => {
-                window.location.href = redirectUrl;
-            }, 1000);
-        });
-    }
-            
             // Simulação de redirecionamento imediato e seguro
             setTimeout(() => {
                 window.location.href = redirectUrl;
